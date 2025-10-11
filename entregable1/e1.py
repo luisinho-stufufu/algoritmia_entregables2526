@@ -3,9 +3,6 @@ from typing import TextIO
 
 from algoritmia.datastructures.queues import Fifo
 
-from entregable1.e1_viewer import total_cal
-
-
 # --- Comprobamos las versiones de Python y algoritmia ---
 
 def _check_environment(min_py: tuple[int, ...], min_alg: tuple[int, ...]):
