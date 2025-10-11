@@ -63,75 +63,53 @@ def read_data(f: TextIO) -> Data:
 
     return calX,calY,n_rows,n_cols,lab
 
-# Función auxiliar para construir el camino
-def path_recover(edges: list[Edge],
-                 target: Vertex) -> list[Vertex]:
 
-    bp: dict[Vertex, Vertex] = {}
-    for (u,v) in edges:
-        bp[v] = u
-
-    # Usar bp para recuperar el camino
-    v = target
-    path = [v]
-    while v != bp[v]:
-        v = bp[v]
-        path.append(v)
-    path.reverse()
-    return path
-
-def bf_search(g: UndirectedGraph[Vertex], source: Vertex) -> list[Edge]:
+# Función auxiliar
+def bf_search_info(g: UndirectedGraph[Vertex], source: Vertex) -> tuple[dict[Vertex, int], dict[Vertex, Vertex]]:
     queue: Fifo[Vertex] = Fifo()
-    seen: set[Vertex] = set()
-    edges: list[Edge] = []
+    dist: dict[Vertex, int] = {source: 0}
+    parent: dict[Vertex, Vertex] = {source: source}
 
-    seen.add(source)
     queue.push(source)
-    edges.append((source, source))
-
     while len(queue) > 0:
         u = queue.pop()
         for v in g.succs(u):
-            if v not in seen:
-                seen.add(v)
+            if v not in dist:  # no visitado
+                dist[v] = dist[u] + 1
+                parent[v] = u
                 queue.push(v)
-                edges.append((u, v))
-    return edges
+    return dist, parent
 
 # - Recibe un objeto de tipo Data con la instancia del problema.
 # - Devuelve el resultado como un objeto de tipo Result.
 def process(data: Data) -> Result:
     calX, calY, n_rows, n_cols, lab = data
+    source: Vertex = (0, 0)
+    target: Vertex = (n_rows - 1, n_cols - 1)
 
-    source = (0, 0)
-    target = (n_rows - 1, n_cols - 1)
+    # Ejecutamos BFS desde ambos extremos
+    dist_start, parent_start = bf_search_info(lab, source)
+    dist_end, parent_end = bf_search_info(lab, target)
 
-    edges_source = bf_search(lab, source)
-    edges_target = bf_search(lab, target)
-
-    vertices = lab.V
-    max_cal = 0
-    mejor_tesoro = (None, None)
-
-    dist_start: dict[Vertex, int] = {}
-    dist_end: dict[Vertex, int] = {}
-
-    for v in vertices:
-        d1 = len(path_recover(edges_source, v)) - 1
-        dist_start[v] = d1
-        d2 = len(path_recover(edges_target, v)) - 1
-        dist_end[v] = d2
-
-        total_cal = calX * d1 + calY * d2
+    # Buscamos el tesoro óptimo
+    max_cal: int = -1
+    mejor_tesoro: Vertex = source
+    for v in lab.V:
+        total_cal = calX * dist_start[v] + calY * dist_end[v]
         if total_cal > max_cal:
             max_cal = total_cal
             mejor_tesoro = v
 
-    if mejor_tesoro is None:
-        return source, 0, [source], [target]
+    # Recuperamos los caminos con los parent obtenidos
+    def recover_path(parent: dict[Vertex, Vertex], target: Vertex) -> Path:
+        path: Path = [target]
+        while path[-1] != parent[path[-1]]:
+            path.append(parent[path[-1]])
+        path.reverse()
+        return path
 
-    path1 = path_recover(edges_source, mejor_tesoro)
-    path2 = path_recover(edges_target, mejor_tesoro)
+    path1: Path = recover_path(parent_start, mejor_tesoro)
+    path2: Path = recover_path(parent_end, mejor_tesoro)
     path2.reverse()
 
     return mejor_tesoro, max_cal, path1, path2
