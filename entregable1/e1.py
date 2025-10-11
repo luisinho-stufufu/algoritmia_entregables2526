@@ -65,7 +65,7 @@ def read_data(f: TextIO) -> Data:
 
 
 # Función auxiliar
-def bf_search_info(g: UndirectedGraph[Vertex], source: Vertex) -> tuple[dict[Vertex, int], dict[Vertex, Vertex]]:
+def bf_search(g: UndirectedGraph[Vertex], source: Vertex) -> tuple[dict[Vertex, int], dict[Vertex, Vertex]]:
     queue: Fifo[Vertex] = Fifo()
     dist: dict[Vertex, int] = {source: 0}
     parent: dict[Vertex, Vertex] = {source: source}
@@ -88,8 +88,8 @@ def process(data: Data) -> Result:
     target: Vertex = (n_rows - 1, n_cols - 1)
 
     # Ejecutamos BFS desde ambos extremos
-    dist_start, parent_start = bf_search_info(lab, source)
-    dist_end, parent_end = bf_search_info(lab, target)
+    dist_start, parent_start = bf_search(lab, source)
+    dist_end, parent_end = bf_search(lab, target)
 
     # Buscamos el tesoro óptimo
     max_cal: int = -1
