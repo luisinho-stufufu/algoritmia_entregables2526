@@ -51,7 +51,15 @@ def _path2str(path: list[Vertex]) -> str:
 #   en el formato descrito en el apartado 1.2 del enunciado.
 # - Devuelve la instancia como un objeto de tipo Data.
 def read_data(f: TextIO) -> Data:
-    pass
+    calX,calY = tuple(int(s) for s in f.readline().split())
+    n_rows,n_cols = tuple(int(s) for s in f.readline().split())
+    edges: list[Edge] = []
+    for line in f:
+        r1,c1,r2,c2 = tuple(int(s) for s in line.split())
+        edges.append(((r1,c1),(r2,c2)))
+    lab = UndirectedGraph(E = edges)
+
+    return calX,calY,n_rows,n_cols,lab
 
 # Función auxiliar para construir el camino
 def path_recover(edges: list[Edge],
