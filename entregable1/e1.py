@@ -1,6 +1,11 @@
 import sys
 from typing import TextIO
 
+from algoritmia.datastructures.queues import Fifo
+
+from entregable1.e1_viewer import total_cal
+
+
 # --- Comprobamos las versiones de Python y algoritmia ---
 
 def _check_environment(min_py: tuple[int, ...], min_alg: tuple[int, ...]):
@@ -78,10 +83,61 @@ def path_recover(edges: list[Edge],
     path.reverse()
     return path
 
+def bf_search(g: UndirectedGraph[Vertex], source: Vertex) -> list[Edge]:
+    queue: Fifo[Vertex] = Fifo()
+    seen: set[Vertex] = set()
+    edges: list[Edge] = []
+
+    seen.add(source)
+    queue.push(source)
+    edges.append((source, source))
+
+    while len(queue) > 0:
+        u = queue.pop()
+        for v in g.succs(u):
+            if v not in seen:
+                seen.add(v)
+                queue.push(v)
+                edges.append((u, v))
+    return edges
+
 # - Recibe un objeto de tipo Data con la instancia del problema.
 # - Devuelve el resultado como un objeto de tipo Result.
 def process(data: Data) -> Result:
-    pass
+    calX, calY, n_rows, n_cols, lab = data
+
+    source = (0, 0)
+    target = (n_rows - 1, n_cols - 1)
+
+    edges_source = bf_search(lab, source)
+    edges_target = bf_search(lab, target)
+
+    vertices = lab.V
+    max_cal = 0
+    mejor_tesoro = (None, None)
+
+    dist_start: dict[Vertex, int] = {}
+    dist_end: dict[Vertex, int] = {}
+
+    for v in vertices:
+        d1 = len(path_recover(edges_source, v)) - 1
+        dist_start[v] = d1
+        d2 = len(path_recover(edges_target, v)) - 1
+        dist_end[v] = d2
+
+        total_cal = calX * d1 + calY * d2
+        if total_cal > max_cal:
+            max_cal = total_cal
+            mejor_tesoro = v
+
+    if mejor_tesoro is None:
+        return source, 0, [source], [target]
+
+    path1 = path_recover(edges_source, mejor_tesoro)
+    path2 = path_recover(edges_target, mejor_tesoro)
+    path2.reverse()
+
+    return mejor_tesoro, max_cal, path1, path2
 
 # - Recibe un objeto de tipo Result con el resultado del problema.
 # - Muestra la salida en el formato que se indica en el apartado 1.3 del enunciado
