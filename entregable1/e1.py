@@ -53,6 +53,23 @@ def _path2str(path: list[Vertex]) -> str:
 def read_data(f: TextIO) -> Data:
     pass
 
+# Función auxiliar para construir el camino
+def path_recover(edges: list[Edge],
+                 target: Vertex) -> list[Vertex]:
+
+    bp: dict[Vertex, Vertex] = {}
+    for (u,v) in edges:
+        bp[v] = u
+
+    # Usar bp para recuperar el camino
+    v = target
+    path = [v]
+    while v != bp[v]:
+        v = bp[v]
+        path.append(v)
+    path.reverse()
+    return path
+
 # - Recibe un objeto de tipo Data con la instancia del problema.
 # - Devuelve el resultado como un objeto de tipo Result.
 def process(data: Data) -> Result:
