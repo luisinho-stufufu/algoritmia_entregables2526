@@ -6,7 +6,10 @@ type Result = tuple[int, int, int] | None
 
 
 def read_data(f: TextIO) -> Data:
-    pass
+    nDias =  int(f.readline())
+    cot =  [int(line) for line in f.readline()]
+
+    return nDias,cot
 
 
 def process(data: Data) -> Result:
