@@ -6,14 +6,26 @@ type Result = tuple[int, int, int] | None
 
 
 def read_data(f: TextIO) -> Data:
-    nDias =  int(f.readline())
-    cot =  [int(line) for line in f.readline()]
-
-    return nDias,cot
+    n_dias = int(f.readline())
+    cot = [int(line) for line in f]
+    return n_dias,cot
 
 
 def process(data: Data) -> Result:
-    pass
+    def rec(b: int, e: int):
+        # if is_simple
+        if e - b == 1:
+            # return trivial solution
+            return None
+        else:
+            # divide
+            mid = (b + e) // 2
+            best_left = rec(b, mid)
+            best_right = rec(mid, e)
+
+            # combine
+
+
 
 
 def show_result(result: Result):
