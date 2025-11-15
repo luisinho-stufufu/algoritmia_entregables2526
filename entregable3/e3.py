@@ -2,7 +2,7 @@ import sys
 from dataclasses import dataclass
 from typing import TextIO, Iterator, Self
 
-from algoritmia.schemes.bt_scheme import DecisionSequence, State
+from algoritmia.schemes.bt_scheme import DecisionSequence, State, bt_solutions, max_solution
 
 
 # --- BEGIN Comprobamos las versiones de Python y algoritmia ---
@@ -59,13 +59,19 @@ def process(data: Data) -> Result:
             pass
 
         def state(self) -> State:
-            pass
+            return len(self), self.extra.sums_min
 
-    def f(solution_ds: EsmeraldasDS) -> int:
+    def f(solution_ds: DecisionSequence[Decision, Extra]) -> int:
+        pass
+
+    initial_ds = EsmeraldasDS(Extra((0,0,0)))
+    all_sols = bt_solutions(initial_ds)
+    best_sol = max_solution(all_sols, f)
+
+    if best_sol is None:
         pass
 
     pass
-
 
 def show_results(result: Result):
     miner_profit, distribution = result
