@@ -40,6 +40,7 @@ def read_data(f: TextIO) -> Data:
 
 def process(data: Data) -> Result:
     val_esm = data
+    total = sum(val_esm) // 3
 
     #Clase extra que almacena las sumas de los mineros en una tupla
     @dataclass
@@ -56,13 +57,30 @@ def process(data: Data) -> Result:
 
 
         def successors(self) -> Iterator[Self]:
-            pass
+            k = len(self)
+
+            if k < len(val_esm):
+                v = val_esm[k]
+                s0, s1, s2 = self.extra.sums_min
+
+                if s0 + v <= total:
+                    yield self.add_decision(0, Extra((s0 + v, s1, s2)))
+
+                if s1 + v <= total:
+                    yield self.add_decision(1, Extra((s0, s1 + v, s2)))
+
+                if s2 + v <= total:
+                    yield self.add_decision(2, Extra((s0, s1, s2 + v)))
+
+                yield self.add_decision(-1, self.extra)
+
+
 
         def state(self) -> State:
             return len(self), self.extra.sums_min
 
     def f(solution_ds: DecisionSequence[Decision, Extra]) -> int:
-        pass
+        return solution_ds.extra.sums_min[0]
 
     initial_ds = EsmeraldasDS(Extra((0,0,0)))
     all_sols = bt_solutions(initial_ds)
