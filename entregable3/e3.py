@@ -1,5 +1,9 @@
 import sys
-from typing import TextIO
+from dataclasses import dataclass
+from typing import TextIO, Iterator, Self
+
+from algoritmia.schemes.bt_scheme import DecisionSequence, State
+
 
 # --- BEGIN Comprobamos las versiones de Python y algoritmia ---
 
@@ -28,13 +32,35 @@ _check_environment((3, 12), (4, 0, 6))  # Versiones mínimas: python 3.12 y algo
 
 type Data = tuple[int, ...]
 type Result = tuple[int, tuple[int, ...]]
+type Decision = int                         #Minero al que se le asigna la esmeralda
 
 def read_data(f: TextIO) -> Data:
     val_esm = tuple(int(linea) for linea in f)
     return val_esm
 
 def process(data: Data) -> Result:
+    val_esm = data
+
+    #Clase extra que almacena las sumas de los mineros en una tupla
+    @dataclass
+    class Extra:
+        sums_min: tuple[int, int, int]
+
+    class EsmeraldasDS (DecisionSequence[Decision,Extra]):
+        def is_solution(self) -> bool:
+            pass
+
+        def successors(self) -> Iterator[Self]:
+            pass
+
+        def state(self) -> State:
+            pass
+
+    def f(solution_ds: EsmeraldasDS) -> int:
+        pass
+
     pass
+
 
 def show_results(result: Result):
     miner_profit, distribution = result
