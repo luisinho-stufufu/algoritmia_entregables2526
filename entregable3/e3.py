@@ -30,7 +30,8 @@ type Data = tuple[int, ...]
 type Result = tuple[int, tuple[int, ...]]
 
 def read_data(f: TextIO) -> Data:
-    pass
+    val_esm = tuple(int(linea) for linea in f)
+    return val_esm
 
 def process(data: Data) -> Result:
     pass
