@@ -87,9 +87,15 @@ def process(data: Data) -> Result:
     best_sol = max_solution(all_sols, f)
 
     if best_sol is None:
-        pass
+        valor = 0
+        reparto = tuple([-1] * len(val_esm))
+        return valor, reparto
 
-    pass
+    else:
+        valor = best_sol[0]
+        reparto_aux = best_sol[1]
+        reparto = reparto_aux.decisions()
+        return valor, reparto
 
 def show_results(result: Result):
     miner_profit, distribution = result
