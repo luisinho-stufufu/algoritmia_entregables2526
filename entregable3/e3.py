@@ -2,7 +2,7 @@ import sys
 from dataclasses import dataclass
 from typing import TextIO, Iterator, Self
 
-from algoritmia.schemes.bt_scheme import DecisionSequence, State, bt_solutions, max_solution
+from algoritmia.schemes.bt_scheme import DecisionSequence, State, bt_vc_solutions, max_solution
 
 
 # --- BEGIN Comprobamos las versiones de Python y algoritmia ---
@@ -51,8 +51,8 @@ def process(data: Data) -> Result:
 
         def is_solution(self) -> bool:
             if len(self) == len(val_esm):
-                sums = self.extra.sums_min
-                return sums[0] == sums[1] == sums[2]
+                s0, s1, s2 = self.extra.sums_min
+                return s0 == s1 == s2
             return False
 
 
@@ -77,13 +77,13 @@ def process(data: Data) -> Result:
 
 
         def state(self) -> State:
-            return len(self), self.extra.sums_min
+            return len(self), tuple(sorted(self.extra.sums_min))
 
     def f(solution_ds: DecisionSequence[Decision, Extra]) -> int:
         return solution_ds.extra.sums_min[0]
 
     initial_ds = EsmeraldasDS(Extra((0,0,0)))
-    all_sols = bt_solutions(initial_ds)
+    all_sols = bt_vc_solutions(initial_ds)
     best_sol = max_solution(all_sols, f)
 
     if best_sol is None:
