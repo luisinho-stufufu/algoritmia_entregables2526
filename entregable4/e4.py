@@ -5,7 +5,16 @@ type Data = list[bool]
 type Result = list[int]
 
 def read_data(f: TextIO) -> Data:
-    pass
+
+    pila_cd = []
+    for element in f.readline():
+        if element == "u":
+            pila_cd.append(True)
+        elif element == "d":
+            pila_cd.append(False)
+
+    return pila_cd
+
 
 def process(data: Data) -> Result:
     pass
