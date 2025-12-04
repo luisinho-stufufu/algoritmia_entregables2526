@@ -17,7 +17,20 @@ def read_data(f: TextIO) -> Data:
 
 
 def process(data: Data) -> Result:
-    pass
+    operaciones = []
+    n = len(data)
+
+    if n == 0:
+        return operaciones
+
+    for i in range(n - 1):
+        if data[i] != data[i + 1]:
+            operaciones.append(i + 1)
+
+    if not data[-1]:
+        operaciones.append(n)
+
+    return operaciones
 
 def show_result(result: Result):
     for n in result:
