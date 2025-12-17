@@ -1,5 +1,9 @@
 import sys
-from typing import TextIO
+from dataclasses import dataclass
+from typing import TextIO, Iterator, Self
+
+from algoritmia.schemes.bab_scheme import BabDecisionSequence
+
 
 # --- BEGIN Comprobamos las versiones de Python y algoritmia ---
 
@@ -40,7 +44,23 @@ def read_data(f: TextIO) -> Data:
     pass
 
 def process(data: Data) -> Result:
-    pass
+    @dataclass
+    class Extra:
+        pass
+
+    class PuzzleDS(BabDecisionSequence[Decision, Extra, int]):
+        def calculate_opt_bound(self) -> int:
+            pass
+
+        def calculate_pes_bound(self) -> int:
+            pass
+
+        def is_solution(self) -> bool:
+            pass
+
+        def successors(self) -> Iterator[Self]:
+            pass
+
 
 def show_result(result: Result):
     print(result)
