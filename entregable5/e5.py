@@ -41,9 +41,23 @@ type Result = str
 # Funciones principales ------------------------------------------------------
 
 def read_data(f: TextIO) -> Data:
-    pass
+
+    board = []
+    lines = f.readlines()
+
+    for line in lines:
+        row = []
+        for num in line:
+            if num.isdigit():
+                row.append(int(num))
+
+        if len(row) > 0:
+            board.append(row)
+
+    return board
 
 def process(data: Data) -> Result:
+
     @dataclass
     class Extra:
         pass
@@ -56,6 +70,9 @@ def process(data: Data) -> Result:
             pass
 
         def is_solution(self) -> bool:
+            pass
+
+        def state(self):
             pass
 
         def successors(self) -> Iterator[Self]:
